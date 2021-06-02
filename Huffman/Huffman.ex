@@ -1,5 +1,6 @@
 @doc """
 Huffman Tree in Elixir
+Seminar 1 in course ID1019
 """
 defmodule Huffman do
 
