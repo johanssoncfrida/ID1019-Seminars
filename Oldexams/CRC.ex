@@ -23,28 +23,28 @@ defmodule CRC do
     [1,1,0,1,0,0,1,1,1,0,1,1,0,0]
   end
 
-  def run(l, generator) do
+  def run(l, gen) do
     list = l ++ [0,0,0]
     f = fn (a,b) -> a == b end
-    check(list, f)
+    check(list, gen, f)
   end
 
-  def xor([], _, _, _) do [] end
-  def xor(l, _, 0, f) do l end
-  def xor([hl|rest], [hg|tail] = gen, n, f) when n >= 1 do
+  def xor([], _, _) do [] end
+  def xor(l, [], _) do l end
+  def xor([hl|rest], [hg|tail], f) do
     case f.(hl,hg) do
-      true ->  [0|xor(rest,tail,n-1,f)]
-      false -> [1|xor(rest,tail,n-1,f)]
+      true ->  [0|xor(rest,tail,f)]
+      false -> [1|xor(rest,tail,f)]
       end
     end
 
-  def check([], f) do [] end
-  def check([h|t] = l, f) when h == 0 do check(t,f) end
-  def check([h|t] = l, f) do
+  def check([],_, _) do [] end
+  def check([h|t],gen, f) when h == 0 do check(t,gen,f) end
+  def check(l,gen,f) do
     case length(l) do
       3 -> l
-      _ -> list = xor(l, [1,0,1,1], 4,f)
-           check(list, f)
+      _ -> list = xor(l,gen,f)
+           check(list,gen,f)
    end
   end
 
