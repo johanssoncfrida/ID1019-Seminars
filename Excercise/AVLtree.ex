@@ -1,11 +1,5 @@
 defmodule AVLTree do
 
-  @type key :: key
-  @type value :: integer
-  @difference :: integer
-  @spec tree :: {:node, key, value, difference, left, right}
-  @spec empty tree :: nil
-
   def insert(tree, key, value) do
     case insrt(tree, key, value) do
     {:inc, q} -> q
@@ -14,13 +8,13 @@ defmodule AVLTree do
   end
 
   def insrt(nil, key, value) do
-    {:inc, {:node, key, value, 0 nil, nil}}
+    {:inc, {:node, key, value, 0, nil, nil}}
   end
   def insrt({:node, key, _, diff, left, right}, key, value) do
     {:ok, {:node, key, value, diff, left, right}}
   end
 
-  defp insrt({:node, rk, rv, 0, left, right}, kk, kv) when kk < rk do
+  def insrt({:node, rk, rv, 0, left, right}, kk, kv) when kk < rk do
     case insrt(left, kk, kv) do
     {:inc, q} ->
         {:inc, {:node, rk, rv, -1, q, right}}
@@ -29,16 +23,16 @@ defmodule AVLTree do
     end
   end
 
-  defp insrt({:node, rk, rv, 0, left, right}, kk, kv) do
+  def insrt({:node, rk, rv, 0, left, right}, kk, kv) do
     case insrt(right, kk, kv) do
     {:inc, q} ->
-        {:inc, {:node, rk, rv, 0, q, right}}
+        {:inc, {:node, rk, rv, 0, left, q}}
     {:ok, q} ->
-        {:ok, {:node, rk, rv, +1, q, right}}
+        {:ok, {:node, rk, rv, +1, left, q}}
     end
   end
 
-  defp insrt({:node, rk, rv, +1, left, right}, kk, kv) when kk < rk do
+  def insrt({:node, rk, rv, +1, left, right}, kk, kv) when kk < rk do
     case insrt(left, kk, kv) do
     {:inc, q} ->
         {:ok, {:node, rk, rv, 0, q, right}}
@@ -47,16 +41,16 @@ defmodule AVLTree do
     end
   end
 
-  defp insrt({:node, rk, rv, +1, left, right}, kk, kv) do
-    case insrt(right, kv, kv) do
+  def insrt({:node, rk, rv, +1, left, right}, kk, kv) do
+    case insrt(right, kk, kv) do
     {:inc, q} ->
-        {:ok, {:node, rk, rv, +2, q, right}}
+        {:ok, {:node, rk, rv, +2, left, q}}
     {:ok, q} ->
-        {:ok, {:node, rk, rv, +1, q, right}}
+        {:ok, {:node, rk, rv, +1, left, q}}
     end
   end
 
-  defp insrt({:node, rk, rv, -1, left, right}, kk, kv) when kk < rk do
+  def insrt({:node, rk, rv, -1, left, right}, kk, kv) when kk < rk do
     case insrt(left, kk, kv) do
     {:inc, q} ->
         {:ok, rotate({:node, rk, rv, -2, q, right})}
@@ -65,12 +59,12 @@ defmodule AVLTree do
     end
   end
 
-  defp insrt({:node, rk, rv, -1, left, right}, kk, kv) do
+  def insrt({:node, rk, rv, -1, left, right}, kk, kv) do
     case insrt(right, kk, kv) do
     {:inc, q} ->
-        {:ok, rotate({:node, rk, rv, 0, q, right})}
+        {:ok, rotate({:node, rk, rv, 0, left, q})}
     {:ok, q} ->
-        {:ok, {:node, rk, rv, -1, q, right}}
+        {:ok, {:node, rk, rv, -1, left, q}}
     end
   end
 
